@@ -62,6 +62,15 @@ module Radix
         result.payload?.should be_truthy
         result.payload.should eq(node.payload)
       end
+
+      it "allow not to assign payload" do
+        node = Node.new("/", :root)
+        result = Result.new
+        result.payload?.should be_falsey
+
+        result.use node, payload: false
+        result.payload?.should be_falsey
+      end
     end
   end
 end

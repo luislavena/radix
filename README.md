@@ -1,6 +1,7 @@
 # Radix Tree
 
 [![Build Status](https://travis-ci.org/luislavena/radix.svg?branch=master)](https://travis-ci.org/luislavena/radix)
+[![docrystal.org](http://docrystal.org/badge.svg?style=round)](http://docrystal.org/github.com/luiskavena/radix)
 
 [Radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation for
 Crystal language

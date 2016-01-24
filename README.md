@@ -36,7 +36,7 @@ end
 
 You can also extract values from placeholders (as named segments or globbing):
 
-```
+```crystal
 tree.add "/products/:id", :product
 
 result = tree.find "/products/1234"

@@ -340,6 +340,34 @@ module Radix
         end
       end
 
+      context "dealing with multiple named parameters" do
+        it "finds matching path" do
+          tree = Tree.new
+          tree.add "/", :root
+          tree.add "/:section/:page", :static_page
+
+          result = tree.find("/about/shipping")
+          result.found?.should be_true
+          result.key.should eq("/:section/:page")
+          result.payload.should eq(:static_page)
+        end
+
+        it "returns named parameters in result" do
+          tree = Tree.new
+          tree.add "/", :root
+          tree.add "/:section/:page", :static_page
+
+          result = tree.find("/about/shipping")
+          result.found?.should be_true
+
+          result.params.has_key?("section").should be_true
+          result.params["section"].should eq("about")
+
+          result.params.has_key?("page").should be_true
+          result.params["page"].should eq("shipping")
+        end
+      end
+
       context "dealing with both catch all and named parameters" do
         it "finds matching path" do
           tree = Tree.new

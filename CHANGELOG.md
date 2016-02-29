@@ -1,6 +1,6 @@
 # Beryl Changelog
 
-## [Unreleased]
+## [0.1.1] - 2016-02-29
 ### Fixed
 - Fix named parameter key names extraction.
 
@@ -8,4 +8,4 @@
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.1.0...HEAD
+[0.1.1]: https://github.com/luislavena/radix/compare/v0.1.0...v0.1.1

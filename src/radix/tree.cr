@@ -147,6 +147,7 @@ module Radix
         node.children.each do |child|
           # compare first character
           next unless child.key[0]? == new_key[0]?
+          next if new_key[0] == ':'
 
           # when found, add to this child
           added = true

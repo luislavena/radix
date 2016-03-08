@@ -367,6 +367,17 @@ module Radix
           result.payload.should eq(:post)
         end
 
+        it "creates children correctly" do
+          tree = Radix::Tree.new
+          tree.add "/", :root
+          tree.add "/:foo", :foo
+          tree.add "/:bar", :bar
+
+          tree.@root.children.size.should eq(2)
+          tree.@root.children[0].children.size.should eq(0)
+          tree.@root.children[1].children.size.should eq(0)
+        end
+
         it "returns named parameters in result" do
           tree = Tree.new
           tree.add "/", :root

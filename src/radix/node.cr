@@ -88,8 +88,7 @@ module Radix
     # node.priority
     # # => 6
     # ```
-    def key=(value : String)
-      @key = value
+    def key=(@key : String)
       @priority = compute_priority
     end
 

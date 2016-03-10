@@ -48,6 +48,38 @@ end
 
 Please see `Radix::Tree#add` documentation for more usage examples.
 
+## Caveats
+
+Pretty much all Radix implementations have their limitations and this project
+is no exception.
+
+When designing and adding *paths* to build a Tree, please consider that two
+different named parameters cannot share the same level:
+
+```crystal
+tree.add "/", :root
+tree.add "/:post", :post
+tree.add "/:category/:post", :category_post # => Radix::Tree::SharedKeyError
+```
+
+This is because different named parameters at the same level will result in
+incorrect `params` when lookup is performed, and sometimes the value for
+`post` or `category` parameters will not be stored as expected.
+
+To avoid this issue, usage of explicit keys that differentiate each path is
+recommended.
+
+For example, following a good SEO practice will be consider `/:post` as
+absolute permalink for the post and have a list of categories which links to
+the permalinks of the posts under that category:
+
+```crystal
+tree.add "/", :root
+tree.add "/:post", :post                    # this is post permalink
+tree.add "/categories", :categories         # list of categories
+tree.add "/categories/:category", :category # listing of posts under each category
+```
+
 ## Implementation
 
 This project has been inspired and adapted from

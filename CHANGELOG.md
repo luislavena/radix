@@ -4,6 +4,11 @@ All notable changes to Radix project will be documented in this file.
 This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
+## [Unreleased]
+### Removed
+- Attempt to use two named parameters at the same level will raise
+  `Radix::Tree::SharedKeyError`
+
 ## [0.1.2] - 2016-03-10
 ### Fixed
 - No longer split named parameters that share same level (@alsm)

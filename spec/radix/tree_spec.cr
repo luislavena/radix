@@ -209,37 +209,7 @@ module Radix
           tree.root.children[0].children[0].key.should eq("/:subcategory")
         end
 
-        it "does not split named parameter marker when only root is shared" do
-          tree = Tree.new
-          tree.add "/", :root
-          tree.add "/:post", :post
-          tree.add "/:category/:post", :category_post
-
-          # /                 (:root)
-          # +-:category/:post (:category_post)
-          # \-:post           (:post)
-          tree.root.children.size.should eq(2)
-          tree.root.children[0].key.should eq(":category/:post")
-          tree.root.children[1].key.should eq(":post")
-        end
-
-        it "displays deprecation warning when two different named parameters share same level" do
-          tree = Tree.new
-          tree.show_deprecations!
-
-          tree.add "/", :root
-          tree.add "/:post", :post
-          tree.add "/:category/:post", :category_post
-
-          stderr = tree.@stderr.not_nil!
-          stderr.rewind
-          message = stderr.gets_to_end
-
-          message.should contain("DEPRECATION WARNING")
-          message.should contain("Tried to place key ':category/:post' at same level as ':post'")
-        end
-
-        pending "does not allow different named parameters sharing same level" do
+        it "does not allow different named parameters sharing same level" do
           tree = Tree.new
           tree.add "/", :root
           tree.add "/:post", :post

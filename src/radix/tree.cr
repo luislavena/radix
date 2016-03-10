@@ -20,6 +20,13 @@ module Radix
       end
     end
 
+    # :nodoc:
+    class SharedKeyError < Exception
+      def initialize(new_key, existing_key)
+        super("Tried to place key '#{new_key}' at same level as '#{existing_key}'")
+      end
+    end
+
     # Returns the root `Node` element of the Tree.
     #
     # On a new tree instance, this will be a placeholder.
@@ -130,20 +137,7 @@ module Radix
           # Otherwise, compare just first character
           if child.key[0]? == ':' && new_key[0]? == ':'
             unless _same_key?(new_key, child.key)
-              message = <<-NOTICE
-                DEPRECATION WARNING: Usage of two different named parameters at same level
-                will result in lookup issues and misplaced values.
-
-                Tried to place key '%s' at same level as '%s'.
-
-                Future versions will raise `Radix::Tree::SharedKeyError`.
-
-                See Issue #5 for details:
-                https://github.com/luislavena/radix/issues/5
-                NOTICE
-
-              deprecation message % {new_key, child.key}
-              next
+              raise SharedKeyError.new(new_key, child.key)
             end
           else
             next unless child.key[0]? == new_key[0]?

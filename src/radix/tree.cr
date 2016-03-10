@@ -147,7 +147,11 @@ module Radix
         node.children.each do |child|
           # compare first character
           next unless child.key[0]? == new_key[0]?
-          next if new_key[0] == ':'
+          if child.key[0] == ':' && new_key[0] == ':'
+            new_key_param = extract_key(Char::Reader.new(new_key))
+            next if child.key != new_key_param
+            new_key = new_key[new_key.index('/') as Int32..-1]
+          end
 
           # when found, add to this child
           added = true

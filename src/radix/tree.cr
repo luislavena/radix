@@ -102,15 +102,34 @@ module Radix
       end
     end
 
+    private def extract_key(reader : Char::Reader) : String
+      str = String.build do |str|
+        while reader.has_next? && reader.current_char != '/'
+          str << reader.current_char
+          reader.next_char
+        end
+      end
+      str
+    end
+
+    private def match_named_params?(path_reader, key_reader : Char::Reader) : Bool
+      path_param = extract_key path_reader
+      key_param = extract_key key_reader
+      return path_param == key_param
+    end
+
     # :nodoc:
     private def add(path : String, payload, node : Node)
       key_reader = Char::Reader.new(node.key)
       path_reader = Char::Reader.new(path)
 
       # move cursor position to last shared character between key and path
+      # have to skip over any named params, breaking them up causes problems
       while path_reader.has_next? && key_reader.has_next?
+        if path_reader.current_char == ':' && key_reader.current_char == ':'
+          break if !match_named_params?(path_reader, key_reader)
+        end
         break if path_reader.current_char != key_reader.current_char
-
         path_reader.next_char
         key_reader.next_char
       end
@@ -124,9 +143,15 @@ module Radix
         added = false
 
         new_key = path_reader.string.byte_slice(path_reader.pos)
+
         node.children.each do |child|
           # compare first character
           next unless child.key[0]? == new_key[0]?
+          if child.key[0] == ':' && new_key[0] == ':'
+            new_key_param = extract_key(Char::Reader.new(new_key))
+            next if child.key != new_key_param
+            new_key = new_key[new_key.index('/') as Int32..-1]
+          end
 
           # when found, add to this child
           added = true

@@ -352,6 +352,32 @@ module Radix
           result.payload.should eq(:static_page)
         end
 
+        it "finds post in posts" do
+          tree = Tree.new
+          tree.add "/", :root
+          tree.add "/style/:path", :style
+          tree.add "/script/:path", :script
+          tree.add "/:post", :post
+          tree.add "/:category/:post", :catpost
+          tree.add "/:category/:subcategory/:post", :subcatpost
+
+          result = tree.find("/example-post")
+          result.found?.should be_true
+          result.key.should eq("/:post")
+          result.payload.should eq(:post)
+        end
+
+        it "creates children correctly" do
+          tree = Radix::Tree.new
+          tree.add "/", :root
+          tree.add "/:foo", :foo
+          tree.add "/:bar", :bar
+
+          tree.@root.children.size.should eq(2)
+          tree.@root.children[0].children.size.should eq(0)
+          tree.@root.children[1].children.size.should eq(0)
+        end
+
         it "returns named parameters in result" do
           tree = Tree.new
           tree.add "/", :root

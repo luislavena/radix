@@ -1,5 +1,25 @@
 require "../spec_helper"
 
+# Silence deprecation warnings when running specs and allow
+# capture them for inspection.
+module Radix
+  class Tree
+    @show_deprecations = false
+    @stderr : MemoryIO?
+
+    def show_deprecations!
+      @show_deprecations = true
+    end
+
+    private def deprecation(message)
+      if @show_deprecations
+        @stderr ||= MemoryIO.new
+        @stderr.not_nil!.puts message
+      end
+    end
+  end
+end
+
 module Radix
   describe Tree do
     context "a new instance" do
@@ -170,6 +190,63 @@ module Radix
           nodes[1].children[0].key.should eq("/edit")
 
           tree.root.children[1].key.should eq("*filepath")
+        end
+
+        it "does not split named parameters across shared key" do
+          tree = Tree.new
+          tree.add "/", :root
+          tree.add "/:category", :category
+          tree.add "/:category/:subcategory", :subcategory
+
+          # /                         (:root)
+          # +-:category               (:category)
+          #           \-/:subcategory (:subcategory)
+          tree.root.children.size.should eq(1)
+          tree.root.children[0].key.should eq(":category")
+
+          # inner children
+          tree.root.children[0].children.size.should eq(1)
+          tree.root.children[0].children[0].key.should eq("/:subcategory")
+        end
+
+        it "does not split named parameter marker when only root is shared" do
+          tree = Tree.new
+          tree.add "/", :root
+          tree.add "/:post", :post
+          tree.add "/:category/:post", :category_post
+
+          # /                 (:root)
+          # +-:category/:post (:category_post)
+          # \-:post           (:post)
+          tree.root.children.size.should eq(2)
+          tree.root.children[0].key.should eq(":category/:post")
+          tree.root.children[1].key.should eq(":post")
+        end
+
+        it "displays deprecation warning when two different named parameters share same level" do
+          tree = Tree.new
+          tree.show_deprecations!
+
+          tree.add "/", :root
+          tree.add "/:post", :post
+          tree.add "/:category/:post", :category_post
+
+          stderr = tree.@stderr.not_nil!
+          stderr.rewind
+          message = stderr.gets_to_end
+
+          message.should contain("DEPRECATION WARNING")
+          message.should contain("Tried to place key ':category/:post' at same level as ':post'")
+        end
+
+        pending "does not allow different named parameters sharing same level" do
+          tree = Tree.new
+          tree.add "/", :root
+          tree.add "/:post", :post
+
+          expect_raises Tree::SharedKeyError do
+            tree.add "/:category/:post", :category_post
+          end
         end
       end
     end

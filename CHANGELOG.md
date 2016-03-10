@@ -5,6 +5,12 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- No longer split named parameters that share same level (@alsm)
+
+### Changed
+- Attempt to use two named parameters at same level will display a
+  deprecation warning. Future versions will raise `Radix::Tree::SharedKeyError`
 
 ## [0.1.1] - 2016-02-29
 ### Fixed

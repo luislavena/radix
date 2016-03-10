@@ -4,7 +4,7 @@ All notable changes to Radix project will be documented in this file.
 This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
-## [Unreleased]
+## [0.1.2] - 2016-03-10
 ### Fixed
 - No longer split named parameters that share same level (@alsm)
 
@@ -20,5 +20,6 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/luislavena/radix/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/luislavena/radix/compare/v0.1.0...v0.1.1

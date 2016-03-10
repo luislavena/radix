@@ -53,7 +53,7 @@ module Radix
     # tree.add "/abcxyz", :xyz
     # ```
     #
-    # Nodes inside the tree will be adjusted to accomodate the different
+    # Nodes inside the tree will be adjusted to accommodate the different
     # segments of the given *path*.
     #
     # ```
@@ -73,7 +73,7 @@ module Radix
     # tree.add "/products/featured", :featured
     # ```
     #
-    # Catch all (globbing) and named paramters *path* will be located with
+    # Catch all (globbing) and named parameters *path* will be located with
     # lower priority against other nodes.
     #
     # ```

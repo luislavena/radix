@@ -4,7 +4,15 @@ All notable changes to Radix project will be documented in this file.
 This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
-## [0.2.0] - 2016-03-15
+## [0.2.1] - 2016-03-15
+### Fixed
+- Correct `Result#key` incorrect inferred type.
+
+### Removed
+- Attempt to use two named parameters at the same level will raise
+  `Radix::Tree::SharedKeyError`
+
+## [0.2.0] - 2016-03-15 [YANKED]
 ### Removed
 - Attempt to use two named parameters at the same level will raise
   `Radix::Tree::SharedKeyError`
@@ -25,7 +33,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.2.1...HEAD
+[0.2.1]: https://github.com/luislavena/radix/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/luislavena/radix/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/luislavena/radix/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/luislavena/radix/compare/v0.1.0...v0.1.1

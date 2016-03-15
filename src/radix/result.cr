@@ -13,8 +13,8 @@ module Radix
   # A Result is also used recursively by `Tree#find` when collecting extra
   # information like *params*.
   class Result
-    getter :params
-    getter! :payload
+    getter params
+    getter! payload
 
     # :nodoc:
     def initialize
@@ -35,7 +35,7 @@ module Radix
     # result.found?
     # # => true
     # ```
-    def found?
+    def found? : Bool
       payload? ? true : false
     end
 
@@ -60,7 +60,7 @@ module Radix
     # result.key
     # # => ""
     # ```
-    def key
+    def key : String
       return @key if @key
 
       key = String.build { |io|

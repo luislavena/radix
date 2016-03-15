@@ -30,7 +30,7 @@ module Radix
     # Returns the root `Node` element of the Tree.
     #
     # On a new tree instance, this will be a placeholder.
-    getter :root
+    getter root : Node
 
     def initialize
       @root = Node.new("", placeholder: true)
@@ -397,7 +397,7 @@ module Radix
     end
 
     # :nodoc:
-    private def deprecation(message)
+    private def deprecation(message : String)
       STDERR.puts message
       STDERR.flush
     end

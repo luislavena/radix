@@ -27,10 +27,10 @@ module Radix
   # # => [3, 2, 1]
   # ```
   class Node
-    getter :key
-    getter? :placeholder
-    property! :payload
-    property :children
+    getter key : String
+    getter? placeholder : Bool
+    property! payload
+    property children : Array(Node)
 
     # Returns the priority of the Node based on it's *key*
     #
@@ -54,7 +54,7 @@ module Radix
     # Node.new(":query").priority
     # # => 1
     # ```
-    getter :priority
+    getter priority : Int32
 
     # Instantiate a Node
     #

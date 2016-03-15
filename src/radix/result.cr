@@ -61,15 +61,13 @@ module Radix
     # # => ""
     # ```
     def key : String
-      return @key if @key
-
-      key = String.build { |io|
-        @nodes.each do |node|
-          io << node.key
-        end
-      }
-
-      @key = key
+      @key ||= begin
+        String.build { |io|
+          @nodes.each do |node|
+            io << node.key
+          end
+        }
+      end
     end
 
     # Adjust result information by using the details of the given `Node`.

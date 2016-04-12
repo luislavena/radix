@@ -12,7 +12,7 @@ module Radix
   #
   # You can associate a *payload* at insertion which will be return back
   # at retrieval time.
-  class Tree
+  class Tree(T)
     # :nodoc:
     class DuplicateError < Exception
       def initialize(path)
@@ -20,20 +20,13 @@ module Radix
       end
     end
 
-    # :nodoc:
-    class SharedKeyError < Exception
-      def initialize(new_key, existing_key)
-        super("Tried to place key '#{new_key}' at same level as '#{existing_key}'")
-      end
-    end
-
     # Returns the root `Node` element of the Tree.
     #
     # On a new tree instance, this will be a placeholder.
-    getter root : Node
+    getter root : Node(T)
 
     def initialize
-      @root = Node.new("", placeholder: true)
+      @root = Node(T).new("", placeholder: true)
     end
 
     # Inserts given *path* into the Tree
@@ -60,7 +53,7 @@ module Radix
     # tree.add "/abcxyz", :xyz
     # ```
     #
-    # Nodes inside the tree will be adjusted to accommodate the different
+    # Nodes inside the tree will be adjusted to accomodate the different
     # segments of the given *path*.
     #
     # ```
@@ -80,7 +73,7 @@ module Radix
     # tree.add "/products/featured", :featured
     # ```
     #
-    # Catch all (globbing) and named parameters *path* will be located with
+    # Catch all (globbing) and named paramters *path* will be located with
     # lower priority against other nodes.
     #
     # ```
@@ -98,12 +91,12 @@ module Radix
     # # \-*filepath (:all)
     # tree.add "/about", :about
     # ```
-    def add(path : String, payload)
+    def add(path : String, payload : T)
       root = @root
 
       # replace placeholder with new node
       if root.placeholder?
-        @root = Node.new(path, payload)
+        @root = Node(T).new(path, payload)
       else
         add path, payload, root
       end
@@ -132,16 +125,8 @@ module Radix
 
         new_key = path_reader.string.byte_slice(path_reader.pos)
         node.children.each do |child|
-          # if child's key starts with named parameter, compare key until
-          # separator (if present).
-          # Otherwise, compare just first character
-          if child.key[0]? == ':' && new_key[0]? == ':'
-            unless _same_key?(new_key, child.key)
-              raise SharedKeyError.new(new_key, child.key)
-            end
-          else
-            next unless child.key[0]? == new_key[0]?
-          end
+          # compare first character
+          next unless child.key[0]? == new_key[0]?
 
           # when found, add to this child
           added = true
@@ -151,7 +136,7 @@ module Radix
 
         # if no existing child shared part of the key, add a new one
         unless added
-          node.children << Node.new(new_key, payload)
+          node.children << Node(T).new(new_key, payload)
         end
 
         # adjust priorities
@@ -174,11 +159,11 @@ module Radix
         new_key = node.key.byte_slice(path_reader.pos)
         swap_payload = node.payload? ? node.payload : nil
 
-        new_node = Node.new(new_key, swap_payload)
+        new_node = Node(T).new(new_key, swap_payload)
         new_node.children.replace(node.children)
 
         # clear payload and children (this is no longer and endpoint)
-        node.payload = nil
+        # node.payload = nil
         node.children.clear
 
         # adjust existing node key to new partial one
@@ -189,11 +174,11 @@ module Radix
         # determine if path still continues
         if path_reader.pos < path.size
           new_key = path.byte_slice(path_reader.pos)
-          node.children << Node.new(new_key, payload)
+          node.children << Node(T).new(new_key, payload)
           node.sort!
 
           # clear payload (no endpoint)
-          node.payload = nil
+          # node.payload = nil
         else
           # this is an endpoint, set payload
           node.payload = payload
@@ -223,7 +208,7 @@ module Radix
     # # => :about
     # ```
     def find(path : String)
-      result = Result.new
+      result = Result(T).new
       root = @root
 
       # walk the tree from root (first time)
@@ -233,7 +218,7 @@ module Radix
     end
 
     # :nodoc:
-    private def find(path : String, result : Result, node : Node, first = false)
+    private def find(path : String, result : Result, node : Node(T), first = false)
       # special consideration when comparing the first node vs. others
       # in case of node key and path being the same, return the node
       # instead of walking character by character
@@ -272,9 +257,7 @@ module Radix
           path_size = _detect_param_size(path_reader)
 
           # obtain key and value using calculated sizes
-          # for name: skip ':' by moving one character forward and compensate
-          # key size.
-          name = key_reader.string.byte_slice(key_reader.pos + 1, key_size - 1)
+          name = key_reader.string.byte_slice(key_reader.pos + 1, key_size)
           value = path_reader.string.byte_slice(path_reader.pos, path_size)
 
           # add this information to result
@@ -372,34 +355,6 @@ module Radix
       reader.pos = old_pos
 
       count
-    end
-
-    # :nodoc:
-    private def _same_key?(path, key)
-      path_reader = Char::Reader.new(path)
-      key_reader = Char::Reader.new(key)
-
-      different = false
-
-      while (path_reader.has_next? && path_reader.current_char != '/') &&
-            (key_reader.has_next? && key_reader.current_char != '/')
-        if path_reader.current_char != key_reader.current_char
-          different = true
-          break
-        end
-
-        path_reader.next_char
-        key_reader.next_char
-      end
-
-      (!key_reader.has_next? && !different) &&
-        (path_reader.current_char == '/' || !path_reader.has_next?)
-    end
-
-    # :nodoc:
-    private def deprecation(message : String)
-      STDERR.puts message
-      STDERR.flush
     end
   end
 end

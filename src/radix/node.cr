@@ -26,11 +26,11 @@ module Radix
   # node.children.map &.priority
   # # => [3, 2, 1]
   # ```
-  class Node
-    getter key : String
-    getter? placeholder : Bool
-    property! payload
-    property children : Array(Node)
+  class Node(T)
+    getter :key
+    getter? :placeholder
+    property! payload : T
+    property :children
 
     # Returns the priority of the Node based on it's *key*
     #
@@ -54,14 +54,15 @@ module Radix
     # Node.new(":query").priority
     # # => 1
     # ```
-    getter priority : Int32
+    @priority : Int32
+    getter :priority
 
     # Instantiate a Node
     #
     # - *key* - A `String` that represents this node.
     # - *payload* - An Optional payload for this node.
     def initialize(@key : String, @payload = nil, @placeholder = false)
-      @children = [] of Node
+      @children = [] of Node(T)
       @priority = compute_priority
     end
 
@@ -88,7 +89,8 @@ module Radix
     # node.priority
     # # => 6
     # ```
-    def key=(@key : String)
+    def key=(value : String)
+      @key = value
       @priority = compute_priority
     end
 

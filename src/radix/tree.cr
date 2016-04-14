@@ -272,7 +272,7 @@ module Radix
           path_size = _detect_param_size(path_reader)
 
           # obtain key and value using calculated sizes
-          name = key_reader.string.byte_slice(key_reader.pos + 1, key_size)
+          name = key_reader.string.byte_slice(key_reader.pos + 1, key_size - 1)
           value = path_reader.string.byte_slice(path_reader.pos, path_size)
 
           # add this information to result

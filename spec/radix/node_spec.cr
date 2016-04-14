@@ -4,7 +4,7 @@ module Radix
   describe Node do
     describe "#key=" do
       it "accepts change of key after initialization" do
-        node = Node(TestPayload).new("abc")
+        node = Node(TestPayload).new("abc", nil)
         node.key.should eq("abc")
 
         node.key = "xyz"
@@ -25,38 +25,38 @@ module Radix
       end
 
       it "makes optional to provide a payload" do
-        node = Node(TestPayload).new("abc")
+        node = Node(TestPayload).new("abc", nil)
         node.payload?.should be_falsey
       end
     end
 
     describe "#priority" do
       it "calculates it based on key size" do
-        node = Node(TestPayload).new("a")
+        node = Node(TestPayload).new("a", nil)
         node.priority.should eq(1)
 
-        node = Node(TestPayload).new("abc")
+        node = Node(TestPayload).new("abc", nil)
         node.priority.should eq(3)
       end
 
       it "returns zero for catch all (globbed) key" do
-        node = Node(TestPayload).new("*filepath")
+        node = Node(TestPayload).new("*filepath", nil)
         node.priority.should eq(0)
 
-        node = Node(TestPayload).new("/src/*filepath")
+        node = Node(TestPayload).new("/src/*filepath", nil)
         node.priority.should eq(0)
       end
 
       it "returns one for keys with named parameters" do
-        node = Node(TestPayload).new(":query")
+        node = Node(TestPayload).new(":query", nil)
         node.priority.should eq(1)
 
-        node = Node(TestPayload).new("/search/:query")
+        node = Node(TestPayload).new("/search/:query", nil)
         node.priority.should eq(1)
       end
 
       it "changes when key changes" do
-        node = Node(TestPayload).new("a")
+        node = Node(TestPayload).new("a", nil)
         node.priority.should eq(1)
 
         node.key = "abc"
@@ -72,10 +72,10 @@ module Radix
 
     describe "#sort!" do
       it "orders children by priority" do
-        root = Node(TestPayload).new("/")
-        node1 = Node(TestPayload).new("a")
-        node2 = Node(TestPayload).new("bc")
-        node3 = Node(TestPayload).new("def")
+        root = Node(TestPayload).new("/", nil)
+        node1 = Node(TestPayload).new("a", nil)
+        node2 = Node(TestPayload).new("bc", nil)
+        node3 = Node(TestPayload).new("def", nil)
 
         root.children.push(node1, node2, node3)
         root.sort!
@@ -86,10 +86,10 @@ module Radix
       end
 
       it "orders catch all and named parameters lower than others" do
-        root = Node(TestPayload).new("/")
-        node1 = Node(TestPayload).new("*filepath")
-        node2 = Node(TestPayload).new("abc")
-        node3 = Node(TestPayload).new(":query")
+        root = Node(TestPayload).new("/", nil)
+        node1 = Node(TestPayload).new("*filepath", nil)
+        node2 = Node(TestPayload).new("abc", nil)
+        node3 = Node(TestPayload).new(":query", nil)
 
         root.children.push(node1, node2, node3)
         root.sort!

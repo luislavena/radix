@@ -20,13 +20,20 @@ module Radix
       end
     end
 
+    # :nodoc:
+    class SharedKeyError < Exception
+      def initialize(new_key, existing_key)
+        super("Tried to place key '#{new_key}' at same level as '#{existing_key}'")
+      end
+    end
+
     # Returns the root `Node` element of the Tree.
     #
     # On a new tree instance, this will be a placeholder.
     getter root : Node(T)
 
     def initialize
-      @root = Node(T).new("", placeholder: true)
+      @root = Node(T).new("", nil, placeholder: true)
     end
 
     # Inserts given *path* into the Tree
@@ -103,7 +110,7 @@ module Radix
     end
 
     # :nodoc:
-    private def add(path : String, payload, node : Node)
+    private def add(path : String, payload, node : Node(T))
       key_reader = Char::Reader.new(node.key)
       path_reader = Char::Reader.new(path)
 

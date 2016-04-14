@@ -13,7 +13,7 @@ module Radix
       context "with a payload" do
         it "returns true" do
           payload = TestPayload.new
-          node = Node.new("/", payload)
+          node = Node(TestPayload).new("/", payload)
           result = Result(TestPayload).new
           result.use node
 
@@ -33,7 +33,7 @@ module Radix
       context "given one used node" do
         it "returns the node key" do
           payload = TestPayload.new
-          node = Node.new("/", payload)
+          node = Node(TestPayload).new("/", payload)
           result = Result(TestPayload).new
           result.use node
 
@@ -44,8 +44,8 @@ module Radix
       context "using multiple nodes" do
         it "combines the node keys" do
           payload = TestPayload.new
-          node1 = Node.new("/", payload)
-          node2 = Node.new("about", payload)
+          node1 = Node(TestPayload).new("/", payload)
+          node2 = Node(TestPayload).new("about", payload)
           result = Result(TestPayload).new
           result.use node1
           result.use node2
@@ -58,7 +58,7 @@ module Radix
     describe "#use" do
       it "uses the node payload" do
         payload = TestPayload.new
-        node = Node.new("/", payload)
+        node = Node(TestPayload).new("/", payload)
         result = Result(TestPayload).new
         result.payload?.should be_falsey
 
@@ -69,7 +69,7 @@ module Radix
 
       it "allow not to assign payload" do
         payload = TestPayload.new
-        node = Node.new("/", payload)
+        node = Node(TestPayload).new("/", payload)
         result = Result(TestPayload).new
         result.payload?.should be_falsey
 

@@ -29,7 +29,7 @@ module Radix
   class Node(T)
     getter :key
     getter? :placeholder
-    property! payload : T
+    property! payload : T?
     property :children
 
     # Returns the priority of the Node based on it's *key*
@@ -61,7 +61,7 @@ module Radix
     #
     # - *key* - A `String` that represents this node.
     # - *payload* - An Optional payload for this node.
-    def initialize(@key : String, @payload : T = nil, @placeholder = false)
+    def initialize(@key : String, @payload, @placeholder = false)
       @children = [] of Node(T)
       @priority = compute_priority
     end

@@ -3,7 +3,7 @@ require "../spec_helper"
 # Silence deprecation warnings when running specs and allow
 # capture them for inspection.
 module Radix
-  class Tree
+  class Tree(T)
     @show_deprecations = false
     @stderr : MemoryIO?
 
@@ -20,12 +20,15 @@ module Radix
   end
 end
 
+# Simple Payload class
+record Payload
+
 module Radix
   describe Tree do
     context "a new instance" do
       it "contains a root placeholder node" do
-        tree = Tree.new
-        tree.root.should be_a(Node)
+        tree = Tree(Symbol).new
+        tree.root.should be_a(Node(Symbol))
         tree.root.payload?.should be_falsey
         tree.root.placeholder?.should be_true
       end
@@ -34,9 +37,9 @@ module Radix
     describe "#add" do
       context "on a new instance" do
         it "replaces placeholder with new node" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/abc", :abc
-          tree.root.should be_a(Node)
+          tree.root.should be_a(Node(Symbol))
           tree.root.placeholder?.should be_false
           tree.root.payload?.should be_truthy
           tree.root.payload.should eq(:abc)
@@ -45,7 +48,7 @@ module Radix
 
       context "shared root" do
         it "inserts properly adjacent nodes" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/a", :a
           tree.add "/bc", :bc
@@ -61,7 +64,7 @@ module Radix
         end
 
         it "inserts nodes with shared parent" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/abc", :abc
           tree.add "/axyz", :axyz
@@ -78,7 +81,7 @@ module Radix
         end
 
         it "inserts multiple parent nodes" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/admin/users", :users
           tree.add "/admin/products", :products
@@ -107,7 +110,7 @@ module Radix
         end
 
         it "inserts multiple nodes with mixed parents" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/authorizations", :authorizations
           tree.add "/authorizations/:id", :authorization
           tree.add "/applications", :applications
@@ -127,7 +130,7 @@ module Radix
         end
 
         it "supports insertion of mixed routes out of order" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/user/repos", :my_repos
           tree.add "/users/:user/repos", :user_repos
           tree.add "/users/:user", :user
@@ -148,9 +151,30 @@ module Radix
         end
       end
 
+      context "mixed payloads" do
+        it "allows node with different payloads" do
+          payload1 = Payload.new
+          payload2 = Payload.new
+
+          tree = Tree(Payload | Symbol).new
+          tree.add "/", :root
+          tree.add "/a", payload1
+          tree.add "/bc", payload2
+
+          # /    (:root)
+          # +-bc (payload2)
+          # \-a  (payload1)
+          tree.root.children.size.should eq(2)
+          tree.root.children[0].key.should eq("bc")
+          tree.root.children[0].payload.should eq(payload2)
+          tree.root.children[1].key.should eq("a")
+          tree.root.children[1].payload.should eq(payload1)
+        end
+      end
+
       context "dealing with duplicates" do
         it "does not allow same path be defined twice" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/abc", :abc
 
@@ -164,7 +188,7 @@ module Radix
 
       context "dealing with catch all and named parameters" do
         it "prioritizes nodes correctly" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/*filepath", :all
           tree.add "/products", :products
@@ -193,7 +217,7 @@ module Radix
         end
 
         it "does not split named parameters across shared key" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/:category", :category
           tree.add "/:category/:subcategory", :subcategory
@@ -210,7 +234,7 @@ module Radix
         end
 
         it "does not allow different named parameters sharing same level" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/:post", :post
 
@@ -224,7 +248,7 @@ module Radix
     describe "#find" do
       context "a single node" do
         it "does not find when using different path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/about", :about
 
           result = tree.find "/products"
@@ -232,7 +256,7 @@ module Radix
         end
 
         it "finds when using matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/about", :about
 
           result = tree.find "/about"
@@ -243,7 +267,7 @@ module Radix
         end
 
         it "finds when using path with trailing slash" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/about", :about
 
           result = tree.find "/about/"
@@ -252,7 +276,7 @@ module Radix
         end
 
         it "finds when key has trailing slash" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/about/", :about
 
           result = tree.find "/about"
@@ -264,7 +288,7 @@ module Radix
 
       context "nodes with shared parent" do
         it "finds matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/abc", :abc
           tree.add "/axyz", :axyz
@@ -276,7 +300,7 @@ module Radix
         end
 
         it "finds matching path across parents" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/admin/users", :users
           tree.add "/admin/products", :products
@@ -292,7 +316,7 @@ module Radix
 
       context "dealing with catch all" do
         it "finds matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/*filepath", :all
           tree.add "/about", :about
@@ -304,7 +328,7 @@ module Radix
         end
 
         it "returns catch all in parameters" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/*filepath", :all
           tree.add "/about", :about
@@ -316,7 +340,7 @@ module Radix
         end
 
         it "returns optional catch all" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/search/*extra", :extra
 
@@ -328,7 +352,7 @@ module Radix
         end
 
         it "does not find when catch all is not full match" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/search/public/*query", :search
 
@@ -339,7 +363,7 @@ module Radix
 
       context "dealing with named parameters" do
         it "finds matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/products", :products
           tree.add "/products/:id", :product
@@ -352,7 +376,7 @@ module Radix
         end
 
         it "does not find partial matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/products", :products
           tree.add "/products/:id/edit", :edit
@@ -362,7 +386,7 @@ module Radix
         end
 
         it "returns named parameters in result" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/products", :products
           tree.add "/products/:id", :product
@@ -375,7 +399,7 @@ module Radix
         end
 
         it "returns unicode values in parameters" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/language/:name", :language
           tree.add "/language/:name/about", :about
@@ -389,7 +413,7 @@ module Radix
 
       context "dealing with multiple named parameters" do
         it "finds matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/:section/:page", :static_page
 
@@ -400,7 +424,7 @@ module Radix
         end
 
         it "returns named parameters in result" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/:section/:page", :static_page
 
@@ -417,7 +441,7 @@ module Radix
 
       context "dealing with both catch all and named parameters" do
         it "finds matching path" do
-          tree = Tree.new
+          tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/*filepath", :all
           tree.add "/products", :products

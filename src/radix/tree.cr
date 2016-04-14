@@ -12,7 +12,7 @@ module Radix
   #
   # You can associate a *payload* at insertion which will be return back
   # at retrieval time.
-  class Tree
+  class Tree(T)
     # :nodoc:
     class DuplicateError < Exception
       def initialize(path)
@@ -30,10 +30,10 @@ module Radix
     # Returns the root `Node` element of the Tree.
     #
     # On a new tree instance, this will be a placeholder.
-    getter root : Node
+    getter root : Node(T)
 
     def initialize
-      @root = Node.new("", placeholder: true)
+      @root = Node(T).new("", placeholder: true)
     end
 
     # Inserts given *path* into the Tree
@@ -98,19 +98,19 @@ module Radix
     # # \-*filepath (:all)
     # tree.add "/about", :about
     # ```
-    def add(path : String, payload)
+    def add(path : String, payload : T)
       root = @root
 
       # replace placeholder with new node
       if root.placeholder?
-        @root = Node.new(path, payload)
+        @root = Node(T).new(path, payload)
       else
         add path, payload, root
       end
     end
 
     # :nodoc:
-    private def add(path : String, payload, node : Node)
+    private def add(path : String, payload : T, node : Node(T))
       key_reader = Char::Reader.new(node.key)
       path_reader = Char::Reader.new(path)
 
@@ -151,7 +151,7 @@ module Radix
 
         # if no existing child shared part of the key, add a new one
         unless added
-          node.children << Node.new(new_key, payload)
+          node.children << Node(T).new(new_key, payload)
         end
 
         # adjust priorities
@@ -174,7 +174,7 @@ module Radix
         new_key = node.key.byte_slice(path_reader.pos)
         swap_payload = node.payload? ? node.payload : nil
 
-        new_node = Node.new(new_key, swap_payload)
+        new_node = Node(T).new(new_key, swap_payload)
         new_node.children.replace(node.children)
 
         # clear payload and children (this is no longer and endpoint)
@@ -189,7 +189,7 @@ module Radix
         # determine if path still continues
         if path_reader.pos < path.size
           new_key = path.byte_slice(path_reader.pos)
-          node.children << Node.new(new_key, payload)
+          node.children << Node(T).new(new_key, payload)
           node.sort!
 
           # clear payload (no endpoint)
@@ -223,7 +223,7 @@ module Radix
     # # => :about
     # ```
     def find(path : String)
-      result = Result.new
+      result = Result(T).new
       root = @root
 
       # walk the tree from root (first time)

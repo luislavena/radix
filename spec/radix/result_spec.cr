@@ -5,15 +5,15 @@ module Radix
     describe "#found?" do
       context "a new instance" do
         it "returns false when no payload is associated" do
-          result = Result.new
+          result = Result(Nil).new
           result.found?.should be_false
         end
       end
 
       context "with a payload" do
         it "returns true" do
-          node = Node.new("/", :root)
-          result = Result.new
+          node = Node(Symbol).new("/", :root)
+          result = Result(Symbol).new
           result.use node
 
           result.found?.should be_true
@@ -24,15 +24,15 @@ module Radix
     describe "#key" do
       context "a new instance" do
         it "returns an empty key" do
-          result = Result.new
+          result = Result(Nil).new
           result.key.should eq("")
         end
       end
 
       context "given one used node" do
         it "returns the node key" do
-          node = Node.new("/", :root)
-          result = Result.new
+          node = Node(Symbol).new("/", :root)
+          result = Result(Symbol).new
           result.use node
 
           result.key.should eq("/")
@@ -41,9 +41,9 @@ module Radix
 
       context "using multiple nodes" do
         it "combines the node keys" do
-          node1 = Node.new("/", :root)
-          node2 = Node.new("about", :about)
-          result = Result.new
+          node1 = Node(Symbol).new("/", :root)
+          node2 = Node(Symbol).new("about", :about)
+          result = Result(Symbol).new
           result.use node1
           result.use node2
 
@@ -54,8 +54,8 @@ module Radix
 
     describe "#use" do
       it "uses the node payload" do
-        node = Node.new("/", :root)
-        result = Result.new
+        node = Node(Symbol).new("/", :root)
+        result = Result(Symbol).new
         result.payload?.should be_falsey
 
         result.use node
@@ -64,8 +64,8 @@ module Radix
       end
 
       it "allow not to assign payload" do
-        node = Node.new("/", :root)
-        result = Result.new
+        node = Node(Symbol).new("/", :root)
+        result = Result(Symbol).new
         result.payload?.should be_falsey
 
         result.use node, payload: false

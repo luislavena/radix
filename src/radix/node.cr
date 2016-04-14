@@ -61,7 +61,7 @@ module Radix
     #
     # - *key* - A `String` that represents this node.
     # - *payload* - An Optional payload for this node.
-    def initialize(@key : String, @payload = nil, @placeholder = false)
+    def initialize(@key : String, @payload : T = nil, @placeholder = false)
       @children = [] of Node(T)
       @priority = compute_priority
     end

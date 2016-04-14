@@ -125,8 +125,16 @@ module Radix
 
         new_key = path_reader.string.byte_slice(path_reader.pos)
         node.children.each do |child|
-          # compare first character
-          next unless child.key[0]? == new_key[0]?
+          # if child's key starts with named parameter, compare key until
+          # separator (if present).
+          # Otherwise, compare just first character
+          if child.key[0]? == ':' && new_key[0]? == ':'
+            unless _same_key?(new_key, child.key)
+              raise SharedKeyError.new(new_key, child.key)
+            end
+          else
+            next unless child.key[0]? == new_key[0]?
+          end
 
           # when found, add to this child
           added = true
@@ -163,7 +171,7 @@ module Radix
         new_node.children.replace(node.children)
 
         # clear payload and children (this is no longer and endpoint)
-        # node.payload = nil
+        node.payload = nil
         node.children.clear
 
         # adjust existing node key to new partial one
@@ -178,7 +186,7 @@ module Radix
           node.sort!
 
           # clear payload (no endpoint)
-          # node.payload = nil
+          node.payload = nil
         else
           # this is an endpoint, set payload
           node.payload = payload
@@ -355,6 +363,34 @@ module Radix
       reader.pos = old_pos
 
       count
+    end
+
+    # :nodoc:
+    private def _same_key?(path, key)
+      path_reader = Char::Reader.new(path)
+      key_reader = Char::Reader.new(key)
+
+      different = false
+
+      while (path_reader.has_next? && path_reader.current_char != '/') &&
+            (key_reader.has_next? && key_reader.current_char != '/')
+        if path_reader.current_char != key_reader.current_char
+          different = true
+          break
+        end
+
+        path_reader.next_char
+        key_reader.next_char
+      end
+
+      (!key_reader.has_next? && !different) &&
+        (path_reader.current_char == '/' || !path_reader.has_next?)
+    end
+
+    # :nodoc:
+    private def deprecation(message : String)
+      STDERR.puts message
+      STDERR.flush
     end
   end
 end

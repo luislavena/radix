@@ -16,10 +16,13 @@ module Radix
     getter params
     getter! payload : T
 
+    @key : String?
+
     # :nodoc:
     def initialize
       @nodes = [] of Node(T)
       @params = {} of String => String
+      @key = nil
     end
 
     # Returns whatever a *payload* was found by `Tree#find` and is part of
@@ -61,15 +64,13 @@ module Radix
     # # => ""
     # ```
     def key
-      return @key if @key
-
-      key = String.build { |io|
-        @nodes.each do |node|
-          io << node.key
-        end
-      }
-
-      @key = key
+      @key ||= begin
+        String.build { |io|
+          @nodes.each do |node|
+            io << node.key
+          end
+        }
+      end
     end
 
     # Adjust result information by using the details of the given `Node`.

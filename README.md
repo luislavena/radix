@@ -1,10 +1,10 @@
 # Radix Tree
 
-[![Build Status](https://travis-ci.org/luislavena/radix.svg?branch=master)](https://travis-ci.org/luislavena/radix)
-[![docrystal.org](http://docrystal.org/badge.svg?style=round)](http://docrystal.org/github.com/luislavena/radix)
-
 [Radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation for
 Crystal language
+
+[![Build Status](https://travis-ci.org/luislavena/radix.svg?branch=master)](https://travis-ci.org/luislavena/radix)
+[![docrystal.org](http://docrystal.org/badge.svg?style=round)](http://docrystal.org/github.com/luislavena/radix)
 
 ## Installation
 
@@ -18,12 +18,14 @@ dependencies:
 
 ## Usage
 
+### Building Trees
+
 You can associate a *payload* with each path added to the tree:
 
 ```crystal
 require "radix"
 
-tree = Radix::Tree.new
+tree = Radix::Tree(Symbol).new
 tree.add "/products", :products
 tree.add "/products/featured", :featured
 
@@ -33,6 +35,30 @@ if result.found?
   puts result.payload # => :featured
 end
 ```
+
+The types allowed for payload are defined on Tree definition:
+
+```crystal
+tree = Radix::Tree(Symbol).new
+
+# Good, since Symbol is allowed as payload
+tree.add "/", :root
+
+# Compilation error, Int32 is not allowed
+tree.add "/meaning-of-life", 42
+```
+
+Can combine multiple types if needed:
+
+```crystal
+tree = Radix::Tree(Int32 | String | Symbol).new
+
+tree.add "/", :root
+tree.add "/meaning-of-life", 42
+tree.add "/hello", "world"
+```
+
+### Lookup and placeholders
 
 You can also extract values from placeholders (as named segments or globbing):
 
@@ -53,8 +79,8 @@ Please see `Radix::Tree#add` documentation for more usage examples.
 Pretty much all Radix implementations have their limitations and this project
 is no exception.
 
-When designing and adding *paths* to build a Tree, please consider that two
-different named parameters cannot share the same level:
+When designing and adding *paths* to a Tree, please consider that two different
+named parameters cannot share the same level:
 
 ```crystal
 tree.add "/", :root

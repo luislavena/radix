@@ -12,13 +12,15 @@ module Radix
   #
   # A Result is also used recursively by `Tree#find` when collecting extra
   # information like *params*.
-  class Result
+  class Result(T)
+    @key : String?
+
     getter params
-    getter! payload
+    getter! payload : T?
 
     # :nodoc:
     def initialize
-      @nodes = [] of Node
+      @nodes = [] of Node(T)
       @params = {} of String => String
     end
 
@@ -26,26 +28,26 @@ module Radix
     # the result.
     #
     # ```
-    # result = Result.new
+    # result = Result(Symbol).new
     # result.found?
     # # => false
     #
-    # root = Node.new("/", :root)
+    # root = Node(Symbol).new("/", :root)
     # result.use(root)
     # result.found?
     # # => true
     # ```
-    def found? : Bool
+    def found?
       payload? ? true : false
     end
 
     # Returns a String built based on the nodes used in the result
     #
     # ```
-    # node1 = Node.new("/", :root)
-    # node2 = Node.new("about", :about)
+    # node1 = Node(Symbol).new("/", :root)
+    # node2 = Node(Symbol).new("about", :about)
     #
-    # result = Result.new
+    # result = Result(Symbol).new
     # result.use node1
     # result.use node2
     #
@@ -56,11 +58,11 @@ module Radix
     # When no node has been used, returns an empty String.
     #
     # ```
-    # result = Result.new
+    # result = Result(Nil).new
     # result.key
     # # => ""
     # ```
-    def key : String
+    def key
       @key ||= begin
         String.build { |io|
           @nodes.each do |node|
@@ -74,7 +76,7 @@ module Radix
     #
     # * Collect `Node` for future references.
     # * Use *payload* if present.
-    def use(node : Node, payload = true)
+    def use(node : Node(T), payload = true)
       # collect nodes
       @nodes << node
 

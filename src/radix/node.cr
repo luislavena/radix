@@ -26,11 +26,11 @@ module Radix
   # node.children.map &.priority
   # # => [3, 2, 1]
   # ```
-  class Node
-    getter key : String
-    getter? placeholder : Bool
-    property! payload
-    property children : Array(Node)
+  class Node(T)
+    getter key
+    getter? placeholder
+    property! payload : T | Nil
+    property children
 
     # Returns the priority of the Node based on it's *key*
     #
@@ -42,16 +42,16 @@ module Radix
     # * Any other type of key will receive priority based on its size.
     #
     # ```
-    # Node.new("a").priority
+    # Node(Nil).new("a").priority
     # # => 1
     #
-    # Node.new("abc").priority
+    # Node(Nil).new("abc").priority
     # # => 3
     #
-    # Node.new("*filepath").priority
+    # Node(Nil).new("*filepath").priority
     # # => 0
     #
-    # Node.new(":query").priority
+    # Node(Nil).new(":query").priority
     # # => 1
     # ```
     getter priority : Int32
@@ -59,16 +59,30 @@ module Radix
     # Instantiate a Node
     #
     # - *key* - A `String` that represents this node.
-    # - *payload* - An Optional payload for this node.
-    def initialize(@key : String, @payload = nil, @placeholder = false)
-      @children = [] of Node
+    # - *payload* - An optional payload for this node.
+    #
+    # When *payload* is not supplied, ensure the type of the node is provided
+    # instead:
+    #
+    # ```
+    # # Good, node type is inferred from payload (Symbol)
+    # node = Node.new("/", :root)
+    #
+    # # Good, node type is now Int32 but payload is optional
+    # node = Node(Int32).new("/")
+    #
+    # # Error, node type cannot be inferred (compiler error)
+    # node = Node.new("/")
+    # ```
+    def initialize(@key : String, @payload : T? = nil, @placeholder = false)
+      @children = [] of Node(T)
       @priority = compute_priority
     end
 
     # Changes current *key*
     #
     # ```
-    # node = Node.new("a")
+    # node = Node(Nil).new("a")
     # node.key
     # # => "a"
     #
@@ -80,7 +94,7 @@ module Radix
     # This will also result in a new priority for the node.
     #
     # ```
-    # node = Node.new("a")
+    # node = Node(Nil).new("a")
     # node.priority
     # # => 1
     #
@@ -88,7 +102,7 @@ module Radix
     # node.priority
     # # => 6
     # ```
-    def key=(@key : String)
+    def key=(@key)
       @priority = compute_priority
     end
 
@@ -115,11 +129,11 @@ module Radix
     # This ensures highest priority nodes are listed before others.
     #
     # ```
-    # root = Node.new("/")
-    # root.children << Node.new("*filepath") # node.priority => 0
-    # root.children << Node.new(":query")    # node.priority => 1
-    # root.children << Node.new("a")         # node.priority => 1
-    # root.children << Node.new("bc")        # node.priority => 2
+    # root = Node(Nil).new("/")
+    # root.children << Node(Nil).new("*filepath") # node.priority => 0
+    # root.children << Node(Nil).new(":query")    # node.priority => 1
+    # root.children << Node(Nil).new("a")         # node.priority => 1
+    # root.children << Node(Nil).new("bc")        # node.priority => 2
     # root.sort!
     #
     # root.children.map &.priority

@@ -4,6 +4,15 @@ All notable changes to Radix project will be documented in this file.
 This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
+## [Unreleased]
+### Fixed
+- Improve forward compatibility with newer versions of the compiler by adding
+  missing types to solve type inference errors.
+
+### Changed
+- `Radix::Tree` now requires the usage of a type which will be used as node's
+  payload. See [README](README.md) for details.
+
 ## [0.2.1] - 2016-03-15
 ### Fixed
 - Correct `Result#key` incorrect inferred type.

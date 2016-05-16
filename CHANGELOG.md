@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Added
+- Introduce `Radix::VERSION` so library version can be used at runtime.
 
 ## [0.3.0] - 2016-04-16
 ### Fixed

@@ -374,7 +374,18 @@ module Radix
       count
     end
 
-    # :nodoc:
+    # Internal: Compares *path* against *key* for differences until the
+    # following criteria is met:
+    #
+    # - End of *path* or *key* is reached.
+    # - A separator (`/`) is found.
+    # - A character between *path* or *key* differs
+    #
+    # ```
+    # _same_key?("foo", "bar")         # => false (mismatch at 1st character)
+    # _same_key?("foo/bar", "foo/baz") # => true (only `foo` is compared)
+    # _same_key?("zipcode", "zip")     # => false (`zip` is shorter)
+    # ```
     private def _same_key?(path, key)
       path_reader = Char::Reader.new(path)
       key_reader = Char::Reader.new(key)
@@ -392,7 +403,7 @@ module Radix
         key_reader.next_char
       end
 
-      (!key_reader.has_next? && !different) &&
+      (!different) &&
         (path_reader.current_char == '/' || !path_reader.has_next?)
     end
 

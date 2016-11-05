@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Do not force adding paths with shared named parameter in an specific order (@jwoertink)
 
 ## [0.3.1] - 2016-07-29
 ### Added

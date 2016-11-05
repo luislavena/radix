@@ -233,6 +233,30 @@ module Radix
           tree.root.children[0].children[0].key.should eq("/:subcategory")
         end
 
+        it "does allow same named parameter in different order of insertion" do
+          tree = Tree(Symbol).new
+          tree.add "/members/:id/edit", :member_edit
+          tree.add "/members/export", :members_export
+          tree.add "/members/:id/videos", :member_videos
+
+          # /members/
+          #         +-export      (:members_export)
+          #         \-:id/
+          #              +-videos (:members_videos)
+          #              \-edit   (:members_edit)
+          tree.root.key.should eq("/members/")
+          tree.root.children.size.should eq(2)
+
+          # first level children nodes
+          tree.root.children[0].key.should eq("export")
+          tree.root.children[1].key.should eq(":id/")
+
+          # inner children
+          nodes = tree.root.children[1].children
+          nodes[0].key.should eq("videos")
+          nodes[1].key.should eq("edit")
+        end
+
         it "does not allow different named parameters sharing same level" do
           tree = Tree(Symbol).new
           tree.add "/", :root

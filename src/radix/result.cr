@@ -2,16 +2,16 @@ require "./node"
 
 module Radix
   # A Result is the comulative output of walking our [Radix tree](https://en.wikipedia.org/wiki/Radix_tree)
-  # `Tree` implementation.
+  # `Radix::Tree` implementation.
   #
   # It provides helpers to retrieve the information obtained from walking
-  # our tree using `Tree#find`
+  # our tree using `Radix::Tree#find`
   #
   # This information can be used to perform actions in case of the *path*
   # that was looked on the Tree was found.
   #
-  # A Result is also used recursively by `Tree#find` when collecting extra
-  # information like *params*.
+  # A Result is also used recursively by `Radix::Tree#find` when collecting
+  # extra information like *params*.
   class Result(T)
     @key : String?
 
@@ -28,11 +28,11 @@ module Radix
     # the result.
     #
     # ```
-    # result = Result(Symbol).new
+    # result = Radix::Result(Symbol).new
     # result.found?
     # # => false
     #
-    # root = Node(Symbol).new("/", :root)
+    # root = Radix::Node(Symbol).new("/", :root)
     # result.use(root)
     # result.found?
     # # => true
@@ -44,10 +44,10 @@ module Radix
     # Returns a String built based on the nodes used in the result
     #
     # ```
-    # node1 = Node(Symbol).new("/", :root)
-    # node2 = Node(Symbol).new("about", :about)
+    # node1 = Radix::Node(Symbol).new("/", :root)
+    # node2 = Radix::Node(Symbol).new("about", :about)
     #
-    # result = Result(Symbol).new
+    # result = Radix::Result(Symbol).new
     # result.use node1
     # result.use node2
     #
@@ -58,7 +58,7 @@ module Radix
     # When no node has been used, returns an empty String.
     #
     # ```
-    # result = Result(Nil).new
+    # result = Radix::Result(Nil).new
     # result.key
     # # => ""
     # ```

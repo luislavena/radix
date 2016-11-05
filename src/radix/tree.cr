@@ -45,7 +45,7 @@ module Radix
     # defined placeholder.
     #
     # ```
-    # tree = Tree(Symbol).new
+    # tree = Radix::Tree(Symbol).new
     #
     # # /         (:root)
     # tree.add "/", :root
@@ -64,7 +64,7 @@ module Radix
     # segments of the given *path*.
     #
     # ```
-    # tree = Tree(Symbol).new
+    # tree = Radix::Tree(Symbol).new
     #
     # # / (:root)
     # tree.add "/", :root
@@ -84,7 +84,7 @@ module Radix
     # lower priority against other nodes.
     #
     # ```
-    # tree = Tree(Symbol).new
+    # tree = Radix::Tree(Symbol).new
     #
     # # /           (:root)
     # tree.add "/", :root
@@ -208,7 +208,7 @@ module Radix
     # endpoint is found (or not).
     #
     # ```
-    # tree = Tree(Symbol).new
+    # tree = Radix::Tree(Symbol).new
     # tree.add "/about", :about
     #
     # result = tree.find "/products"

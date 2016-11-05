@@ -8,6 +8,7 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Fixed
 - Do not force adding paths with shared named parameter in an specific order (@jwoertink)
 - Give proper name to `Radix::VERSION` spec when running in verbose mode.
+- Ensure code samples in docs can be executed.
 
 ## [0.3.1] - 2016-07-29
 ### Added

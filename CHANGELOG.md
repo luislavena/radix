@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+
+## [0.3.2] - 2016-11-05
 ### Fixed
 - Do not force adding paths with shared named parameter in an specific order (@jwoertink)
 - Give proper name to `Radix::VERSION` spec when running in verbose mode.
@@ -52,7 +54,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.1...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.2...HEAD
+[0.3.2]: https://github.com/luislavena/radix/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/luislavena/radix/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/luislavena/radix/compare/v0.2.1...v0.3.0
 [0.2.1]: https://github.com/luislavena/radix/compare/v0.2.0...v0.2.1

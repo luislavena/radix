@@ -6,7 +6,11 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
 
-## [0.3.3] - 2016-11-12
+## [0.3.4] - 2016-11-12
+### Fixed
+- Ensure catch all parameter can be used as optional globbing (@jwoertink)
+
+## [0.3.3] - 2016-11-12 [YANKED]
 ### Fixed
 - Ensure catch all parameter can be used as optional globbing (@jwoertink)
 
@@ -58,7 +62,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.3...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.4...HEAD
+[0.3.4]: https://github.com/luislavena/radix/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/luislavena/radix/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/luislavena/radix/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/luislavena/radix/compare/v0.3.0...v0.3.1

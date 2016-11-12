@@ -279,7 +279,7 @@ module Radix
           result.found?.should be_false
         end
 
-        it "finds when using matching path" do
+        it "finds when key and path matches" do
           tree = Tree(Symbol).new
           tree.add "/about", :about
 
@@ -290,7 +290,7 @@ module Radix
           result.payload.should eq(:about)
         end
 
-        it "finds when using path with trailing slash" do
+        it "finds when path contains trailing slash" do
           tree = Tree(Symbol).new
           tree.add "/about", :about
 
@@ -299,7 +299,7 @@ module Radix
           result.key.should eq("/about")
         end
 
-        it "finds when key has trailing slash" do
+        it "finds when key contains trailing slash" do
           tree = Tree(Symbol).new
           tree.add "/about/", :about
 
@@ -363,7 +363,7 @@ module Radix
           result.params["filepath"].should eq("src/file.png")
         end
 
-        it "returns optional catch all" do
+        it "returns optional catch all after slash" do
           tree = Tree(Symbol).new
           tree.add "/", :root
           tree.add "/search/*extra", :extra
@@ -375,6 +375,17 @@ module Radix
           result.params["extra"].empty?.should be_true
         end
 
+        it "returns optional catch all by globbing" do
+          tree = Tree(Symbol).new
+          tree.add "/members*trailing", :members_catch_all
+
+          result = tree.find("/members")
+          result.found?.should be_true
+          result.key.should eq("/members*trailing")
+          result.params.has_key?("trailing").should be_true
+          result.params["trailing"].empty?.should be_true
+        end
+
         it "does not find when catch all is not full match" do
           tree = Tree(Symbol).new
           tree.add "/", :root
@@ -382,6 +393,16 @@ module Radix
 
           result = tree.find("/search")
           result.found?.should be_false
+        end
+
+        it "does prefer specific path over catch all if both are present" do
+          tree = Tree(Symbol).new
+          tree.add "/members", :members
+          tree.add "/members*trailing", :members_catch_all
+
+          result = tree.find("/members")
+          result.found?.should be_true
+          result.key.should eq("/members")
         end
       end
 

@@ -336,10 +336,12 @@ module Radix
 
         # check if remaining part is catch all
         if key_reader.pos < node.key.size &&
-           key_reader.current_char == '/' &&
-           key_reader.peek_next_char == '*'
-          # skip '*'
-          key_reader.next_char
+           ((key_reader.current_char == '/' && key_reader.peek_next_char == '*') ||
+           key_reader.current_char == '*')
+          # skip to '*' only if necessary
+          unless key_reader.current_char == '*'
+            key_reader.next_char
+          end
 
           # deal with catch all, but since there is nothing in the path
           # return parameter as empty

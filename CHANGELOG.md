@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Ensure catch all parameter can be used as optional globbing (@jwoertink)
 
 ## [0.3.2] - 2016-11-05
 ### Fixed

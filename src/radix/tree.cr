@@ -313,9 +313,10 @@ module Radix
         # not found in current node, check inside children nodes
         new_path = path_reader.string.byte_slice(path_reader.pos)
         node.children.each do |child|
-          # check if child first character matches the new path
-          if child.key[0]? == new_path[0]? ||
-             child.key[0]? == '*' || child.key[0]? == ':'
+          # check if child key is a named parameter, catch all or shares parts
+          # with new path
+          if (child.key[0]? == '*' || child.key[0]? == ':') ||
+             _shared_key?(new_path, child.key)
             # consider this node for key but don't use payload
             result.use node, payload: false
 
@@ -376,6 +377,16 @@ module Radix
       count
     end
 
+    # Internal: allow inline comparison of *char* against 3 defined markers:
+    #
+    # - Path separator (`/`)
+    # - Named parameter (`:`)
+    # - Catch all (`*`)
+    @[AlwaysInline]
+    private def _check_markers(char)
+      (char == '/' || char == ':' || char == '*')
+    end
+
     # Internal: Compares *path* against *key* for differences until the
     # following criteria is met:
     #
@@ -407,6 +418,40 @@ module Radix
 
       (!different) &&
         (path_reader.current_char == '/' || !path_reader.has_next?)
+    end
+
+    # Internal: Compares *path* against *key* for equality until one of the
+    # following criterias is met:
+    #
+    # - End of *path* or *key* is reached.
+    # - A separator (`/`) is found.
+    # - A named parameter (`:`) or catch all (`*`) is found.
+    # - A character in *path* differs from *key*
+    #
+    # ```
+    # _shared_key?("foo", "bar")         # => false (mismatch at 1st character)
+    # _shared_key?("foo/bar", "foo/baz") # => true (only `foo` is compared)
+    # _shared_key?("zipcode", "zip")     # => true (only `zip` is compared)
+    # ```
+    private def _shared_key?(path, key)
+      path_reader = Char::Reader.new(path)
+      key_reader = Char::Reader.new(key)
+
+      different = false
+
+      while (path_reader.has_next? && !_check_markers(path_reader.current_char)) &&
+            (key_reader.has_next? && !_check_markers(key_reader.current_char))
+        if path_reader.current_char != key_reader.current_char
+          different = true
+          break
+        end
+
+        path_reader.next_char
+        key_reader.next_char
+      end
+
+      (!different) &&
+        (!key_reader.has_next? || _check_markers(key_reader.current_char))
     end
 
     # :nodoc:

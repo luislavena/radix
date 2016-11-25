@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+
+## [0.3.5] - 2016-11-24
 ### Fixed
 - Correct lookup issue when dealing with catch all and shared partial key (@crisward)
 
@@ -64,7 +66,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.4...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/luislavena/radix/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/luislavena/radix/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/luislavena/radix/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/luislavena/radix/compare/v0.3.1...v0.3.2

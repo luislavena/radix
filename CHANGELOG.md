@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Correct lookup issue when dealing with catch all and shared partial key (@crisward)
 
 ## [0.3.4] - 2016-11-12
 ### Fixed

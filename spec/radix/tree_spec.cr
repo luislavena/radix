@@ -404,6 +404,18 @@ module Radix
           result.found?.should be_true
           result.key.should eq("/members")
         end
+
+        it "does prefer catch all over specific key with partially shared key" do
+          tree = Tree(Symbol).new
+          tree.add "/orders/*anything", :orders_catch_all
+          tree.add "/orders/closed", :closed_orders
+
+          result = tree.find("/orders/cancelled")
+          result.found?.should be_true
+          result.key.should eq("/orders/*anything")
+          result.params.has_key?("anything").should be_true
+          result.params["anything"].should eq("cancelled")
+        end
       end
 
       context "dealing with named parameters" do

@@ -5,7 +5,7 @@ require "../spec_helper"
 module Radix
   class Tree(T)
     @show_deprecations = false
-    @stderr : MemoryIO?
+    @stderr : IO::Memory?
 
     def show_deprecations!
       @show_deprecations = true
@@ -13,7 +13,7 @@ module Radix
 
     private def deprecation(message)
       if @show_deprecations
-        @stderr ||= MemoryIO.new
+        @stderr ||= IO::Memory.new
         @stderr.not_nil!.puts message
       end
     end

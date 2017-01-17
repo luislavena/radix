@@ -466,6 +466,28 @@ module Radix
           result.params.has_key?("name").should be_true
           result.params["name"].should eq("日本語")
         end
+
+        it "does prefer specific path over named parameters one if both are present" do
+          tree = Tree(Symbol).new
+          tree.add "/tag-edit/:tag", :edit_tag
+          tree.add "/tag-edit2", :alternate_tag_edit
+
+          result = tree.find("/tag-edit2")
+          result.found?.should be_true
+          result.key.should eq("/tag-edit2")
+        end
+
+        it "does prefer named parameter over specific key with partially shared key" do
+          tree = Tree(Symbol).new
+          tree.add "/orders/:id", :specific_order
+          tree.add "/orders/closed", :closed_orders
+
+          result = tree.find("/orders/10")
+          result.found?.should be_true
+          result.key.should eq("/orders/:id")
+          result.params.has_key?("id").should be_true
+          result.params["id"].should eq("10")
+        end
       end
 
       context "dealing with multiple named parameters" do

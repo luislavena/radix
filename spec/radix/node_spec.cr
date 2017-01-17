@@ -46,18 +46,18 @@ module Radix
 
       it "returns zero for catch all (globbed) key" do
         node = Node(Nil).new("*filepath")
-        node.priority.should eq(0)
+        node.priority.should eq(-2)
 
         node = Node(Nil).new("/src/*filepath")
-        node.priority.should eq(0)
+        node.priority.should eq(-2)
       end
 
       it "returns one for keys with named parameters" do
         node = Node(Nil).new(":query")
-        node.priority.should eq(1)
+        node.priority.should eq(-1)
 
         node = Node(Nil).new("/search/:query")
-        node.priority.should eq(1)
+        node.priority.should eq(-1)
       end
 
       it "changes when key changes" do
@@ -68,10 +68,10 @@ module Radix
         node.priority.should eq(3)
 
         node.key = "*filepath"
-        node.priority.should eq(0)
+        node.priority.should eq(-2)
 
         node.key = ":query"
-        node.priority.should eq(1)
+        node.priority.should eq(-1)
       end
     end
 

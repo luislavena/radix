@@ -5,6 +5,9 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Correct lookup issue caused by similar priority between named paramter and
+  shared partial key [kemalcr/kemal#293](https://github.com/kemalcr/kemal/issues/293)
 
 ## [0.3.5] - 2016-11-24
 ### Fixed

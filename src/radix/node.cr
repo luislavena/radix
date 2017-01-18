@@ -37,8 +37,8 @@ module Radix
     # This value will be directly associated to the key size or special
     # elements of it.
     #
-    # * A catch all (globbed) key will receive lowest priority (`0`)
-    # * A named parameter key will receive priority above catch all (`1`)
+    # * A catch all (globbed) key will receive lowest priority (`-2`)
+    # * A named parameter key will receive priority above catch all (`-1`)
     # * Any other type of key will receive priority based on its size.
     #
     # ```
@@ -49,10 +49,10 @@ module Radix
     # # => 3
     #
     # Radix::Node(Nil).new("*filepath").priority
-    # # => 0
+    # # => -2
     #
     # Radix::Node(Nil).new(":query").priority
-    # # => 1
+    # # => -1
     # ```
     getter priority : Int32
 
@@ -113,9 +113,9 @@ module Radix
       while reader.has_next?
         case reader.current_char
         when '*'
-          return 0
+          return -2
         when ':'
-          return 1
+          return -1
         else
           reader.next_char
         end
@@ -130,14 +130,14 @@ module Radix
     #
     # ```
     # root = Radix::Node(Nil).new("/")
-    # root.children << Radix::Node(Nil).new("*filepath") # node.priority => 0
-    # root.children << Radix::Node(Nil).new(":query")    # node.priority => 1
+    # root.children << Radix::Node(Nil).new("*filepath") # node.priority => -2
+    # root.children << Radix::Node(Nil).new(":query")    # node.priority => -1
     # root.children << Radix::Node(Nil).new("a")         # node.priority => 1
     # root.children << Radix::Node(Nil).new("bc")        # node.priority => 2
     # root.sort!
     #
     # root.children.map &.priority
-    # # => [2, 1, 1, 0]
+    # # => [2, 1, -1, -2]
     # ```
     def sort!
       @children.sort_by! { |node| -node.priority }

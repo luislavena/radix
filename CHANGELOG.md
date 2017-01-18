@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+
+## [0.3.6] - 2017-01-18
 ### Fixed
 - Correct lookup issue caused by similar priority between named paramter and
   shared partial key [kemalcr/kemal#293](https://github.com/kemalcr/kemal/issues/293)
@@ -69,7 +71,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.5...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.6...HEAD
+[0.3.6]: https://github.com/luislavena/radix/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/luislavena/radix/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/luislavena/radix/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/luislavena/radix/compare/v0.3.2...v0.3.3

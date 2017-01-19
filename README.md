@@ -3,8 +3,8 @@
 [Radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation for
 Crystal language
 
-[![Build Status](https://travis-ci.org/luislavena/radix.svg?branch=master)](https://travis-ci.org/luislavena/radix)
-[![docrystal.org](http://docrystal.org/badge.svg?style=round)](http://docrystal.org/github.com/luislavena/radix)
+[![Build Status](https://img.shields.io/travis/luislavena/radix/master.svg)](https://travis-ci.org/luislavena/radix)
+[![Latest Release](https://img.shields.io/github/release/luislavena/radix.svg)](https://github.com/luislavena/radix/releases)
 
 ## Installation
 

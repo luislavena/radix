@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+
+## [0.3.7] - 2017-02-04
 ### Fixed
 - Correct prioritization of node's children using combination of kind and
   priority, allowing partial shared keys to coexist and resolve lookup.
@@ -74,7 +76,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.6...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.7...HEAD
+[0.3.7]: https://github.com/luislavena/radix/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/luislavena/radix/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/luislavena/radix/compare/v0.3.4...v0.3.5
 [0.3.4]: https://github.com/luislavena/radix/compare/v0.3.3...v0.3.4

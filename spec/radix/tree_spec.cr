@@ -544,6 +544,19 @@ module Radix
           result.payload.should eq(:featured)
         end
       end
+
+      context "dealing with named parameters and shared key" do
+        it "finds matching path" do
+          tree = Tree(Symbol).new
+          tree.add "/one/:id", :one
+          tree.add "/one-longer/:id", :two
+
+          result = tree.find "/one-longer/10"
+          result.found?.should be_true
+          result.key.should eq("/one-longer/:id")
+          result.params["id"].should eq("10")
+        end
+      end
     end
   end
 end

@@ -5,6 +5,9 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Correct prioritization of node's children using combination of kind and
+  priority, allowing partial shared keys to coexist and resolve lookup.
 
 ## [0.3.6] - 2017-01-18
 ### Fixed

@@ -4,42 +4,34 @@ module Radix
   # Carries a *payload* and might also contain references to other nodes
   # down in the organization inside *children*.
   #
-  # Each node also carries a *priority* number, which might indicate the
-  # weight of this node depending on characteristics like catch all
-  # (globbing), named parameters or simply the size of the Node's *key*.
-  #
-  # Referenced nodes inside *children* can be sorted by *priority*.
+  # Each node also carries identification in relation to the kind of key it
+  # contains, which helps with characteristics of the node like named
+  # parameters or catch all kind (globbing).
   #
   # Is not expected direct usage of a node but instead manipulation via
   # methods within `Tree`.
-  #
-  # ```
-  # node = Radix::Node.new("/", :root)
-  # node.children << Radix::Node.new("a", :a)
-  # node.children << Radix::Node.new("bc", :bc)
-  # node.children << Radix::Node.new("def", :def)
-  # node.sort!
-  #
-  # node.priority
-  # # => 1
-  #
-  # node.children.map &.priority
-  # # => [3, 2, 1]
-  # ```
   class Node(T)
+    include Comparable(self)
+
+    # :nodoc:
+    enum Kind : UInt8
+      Normal
+      Named
+      Glob
+    end
+
     getter key
     getter? placeholder
+    property children = [] of Node(T)
     property! payload : T | Nil
-    property children
+
+    # :nodoc:
+    protected getter kind = Kind::Normal
 
     # Returns the priority of the Node based on it's *key*
     #
-    # This value will be directly associated to the key size or special
-    # elements of it.
-    #
-    # * A catch all (globbed) key will receive lowest priority (`-2`)
-    # * A named parameter key will receive priority above catch all (`-1`)
-    # * Any other type of key will receive priority based on its size.
+    # This value will be directly associated to the key size up until a
+    # special elements is found.
     #
     # ```
     # Radix::Node(Nil).new("a").priority
@@ -48,11 +40,11 @@ module Radix
     # Radix::Node(Nil).new("abc").priority
     # # => 3
     #
-    # Radix::Node(Nil).new("*filepath").priority
-    # # => -2
+    # Radix::Node(Nil).new("/src/*filepath").priority
+    # # => 5
     #
-    # Radix::Node(Nil).new(":query").priority
-    # # => -1
+    # Radix::Node(Nil).new("/search/:query").priority
+    # # => 8
     # ```
     getter priority : Int32
 
@@ -75,8 +67,60 @@ module Radix
     # node = Radix::Node.new("/")
     # ```
     def initialize(@key : String, @payload : T? = nil, @placeholder = false)
-      @children = [] of Node(T)
       @priority = compute_priority
+    end
+
+    # Compares this node against *other*, returning `-1`, `0` or `1` depending
+    # on whether this node differentiates from *other*.
+    #
+    # Comparison is done combining node's `kind` and `priority`. Nodes of
+    # same kind are compared by priority. Nodes of different kind are
+    # ranked.
+    #
+    # ### Normal nodes
+    #
+    # ```
+    # node1 = Radix::Node(Nil).new("a")  # normal
+    # node2 = Radix::Node(Nil).new("bc") # normal
+    # node1 <=> node2                    # => 1
+    # ```
+    #
+    # ### Normal vs named or glob nodes
+    #
+    # ```
+    # node1 = Radix::Node(Nil).new("a")         # normal
+    # node2 = Radix::Node(Nil).new(":query")    # named
+    # node3 = Radix::Node(Nil).new("*filepath") # glob
+    # node1 <=> node2                           # => -1
+    # node1 <=> node3                           # => -1
+    # ```
+    #
+    # ### Named vs glob nodes
+    #
+    # ```
+    # node1 = Radix::Node(Nil).new(":query")    # named
+    # node2 = Radix::Node(Nil).new("*filepath") # glob
+    # node1 <=> node2                           # => -1
+    # ```
+    def <=>(other : self)
+      result = kind <=> other.kind
+      return result if result != 0
+
+      other.priority <=> priority
+    end
+
+    # Returns `true` if the node key contains a glob parameter in it
+    # (catch all)
+    #
+    # ```
+    # node = Radix::Node(Nil).new("*filepath")
+    # node.glob? # => true
+    #
+    # node = Radix::Node(Nil).new("abc")
+    # node.glob? # => false
+    # ```
+    def glob?
+      kind.glob?
     end
 
     # Changes current *key*
@@ -91,7 +135,7 @@ module Radix
     # # => "b"
     # ```
     #
-    # This will also result in a new priority for the node.
+    # This will also result in change of node's `priority`
     #
     # ```
     # node = Radix::Node(Nil).new("a")
@@ -103,7 +147,36 @@ module Radix
     # # => 6
     # ```
     def key=(@key)
+      # reset kind on change of key
+      @kind = Kind::Normal
       @priority = compute_priority
+    end
+
+    # Returns `true` if the node key contains a named parameter in it
+    #
+    # ```
+    # node = Radix::Node(Nil).new(":query")
+    # node.named? # => true
+    #
+    # node = Radix::Node(Nil).new("abc")
+    # node.named? # => false
+    # ```
+    def named?
+      kind.named?
+    end
+
+    # Returns `true` if the node key does not contain an special parameter
+    # (named or glob)
+    #
+    # ```
+    # node = Radix::Node(Nil).new("a")
+    # node.normal? # => true
+    #
+    # node = Radix::Node(Nil).new(":query")
+    # node.normal? # => false
+    # ```
+    def normal?
+      kind.normal?
     end
 
     # :nodoc:
@@ -113,9 +186,11 @@ module Radix
       while reader.has_next?
         case reader.current_char
         when '*'
-          return -2
+          @kind = Kind::Glob
+          break
         when ':'
-          return -1
+          @kind = Kind::Named
+          break
         else
           reader.next_char
         end
@@ -124,23 +199,9 @@ module Radix
       reader.pos
     end
 
-    # Changes the order of Node's children based on each node priority.
-    #
-    # This ensures highest priority nodes are listed before others.
-    #
-    # ```
-    # root = Radix::Node(Nil).new("/")
-    # root.children << Radix::Node(Nil).new("*filepath") # node.priority => -2
-    # root.children << Radix::Node(Nil).new(":query")    # node.priority => -1
-    # root.children << Radix::Node(Nil).new("a")         # node.priority => 1
-    # root.children << Radix::Node(Nil).new("bc")        # node.priority => 2
-    # root.sort!
-    #
-    # root.children.map &.priority
-    # # => [2, 1, -1, -2]
-    # ```
-    def sort!
-      @children.sort_by! { |node| -node.priority }
+    # :nodoc:
+    protected def sort!
+      @children.sort!
     end
   end
 end

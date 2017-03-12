@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Correct lookup issue caused by incorrect comparison of shared key [#21](https://github.com/luislavena/radix/issues/21)
 
 ## [0.3.7] - 2017-02-04
 ### Fixed

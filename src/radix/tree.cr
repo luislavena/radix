@@ -432,10 +432,16 @@ module Radix
     # _shared_key?("foo", "bar")         # => false (mismatch at 1st character)
     # _shared_key?("foo/bar", "foo/baz") # => true (only `foo` is compared)
     # _shared_key?("zipcode", "zip")     # => true (only `zip` is compared)
+    # _shared_key?("s", "/new")          # => false (1st character is a separator)
     # ```
     private def _shared_key?(path, key)
       path_reader = Char::Reader.new(path)
       key_reader = Char::Reader.new(key)
+
+      if (path_reader.current_char != key_reader.current_char) &&
+         _check_markers(key_reader.current_char)
+        return false
+      end
 
       different = false
 

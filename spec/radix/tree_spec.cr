@@ -323,6 +323,17 @@ module Radix
           result.payload.should eq(:abc)
         end
 
+        it "finds matching path across separator" do
+          tree = Tree(Symbol).new
+          tree.add "/products", :products
+          tree.add "/product/new", :product_new
+
+          result = tree.find("/products")
+          result.found?.should be_true
+          result.key.should eq("/products")
+          result.payload.should eq(:products)
+        end
+
         it "finds matching path across parents" do
           tree = Tree(Symbol).new
           tree.add "/", :root

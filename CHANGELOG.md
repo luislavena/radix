@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+
+## [0.3.8] - 2017-03-12
 ### Fixed
 - Correct lookup issue caused by incorrect comparison of shared key [#21](https://github.com/luislavena/radix/issues/21)
 - Improve support for non-ascii keys in a tree.
@@ -79,7 +81,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.7...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.8...HEAD
+[0.3.8]: https://github.com/luislavena/radix/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/luislavena/radix/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/luislavena/radix/compare/v0.3.5...v0.3.6
 [0.3.5]: https://github.com/luislavena/radix/compare/v0.3.4...v0.3.5

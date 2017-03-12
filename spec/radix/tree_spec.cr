@@ -172,6 +172,38 @@ module Radix
         end
       end
 
+      context "dealing with unicode" do
+        it "inserts properly adjacent parent nodes" do
+          tree = Tree(Symbol).new
+          tree.add "/", :root
+          tree.add "/日本語", :japanese
+          tree.add "/素晴らしい", :amazing
+
+          # /          (:root)
+          # +-素晴らしい    (:amazing)
+          # \-日本語      (:japanese)
+          tree.root.children.size.should eq(2)
+          tree.root.children[0].key.should eq("素晴らしい")
+          tree.root.children[1].key.should eq("日本語")
+        end
+
+        it "inserts nodes with shared parent" do
+          tree = Tree(Symbol).new
+          tree.add "/", :root
+          tree.add "/日本語", :japanese
+          tree.add "/日本は難しい", :japanese_is_difficult
+
+          # /                (:root)
+          # \-日本語            (:japanese)
+          #     \-日本は難しい     (:japanese_is_difficult)
+          tree.root.children.size.should eq(1)
+          tree.root.children[0].key.should eq("日本")
+          tree.root.children[0].children.size.should eq(2)
+          tree.root.children[0].children[0].key.should eq("は難しい")
+          tree.root.children[0].children[1].key.should eq("語")
+        end
+      end
+
       context "dealing with duplicates" do
         it "does not allow same path be defined twice" do
           tree = Tree(Symbol).new
@@ -346,6 +378,19 @@ module Radix
           result.found?.should be_true
           result.key.should eq("/blog/tags")
           result.payload.should eq(:tags)
+        end
+      end
+
+      context "unicode nodes with shared parent" do
+        it "finds matching path" do
+          tree = Tree(Symbol).new
+          tree.add "/", :root
+          tree.add "/日本語", :japanese
+          tree.add "/日本日本語は難しい", :japanese_is_difficult
+
+          result = tree.find("/日本日本語は難しい/")
+          result.found?.should be_true
+          result.key.should eq("/日本日本語は難しい")
         end
       end
 

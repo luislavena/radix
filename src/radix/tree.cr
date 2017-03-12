@@ -125,7 +125,7 @@ module Radix
       # determine split point difference between path and key
       # compare if path is larger than key
       if path_reader.pos == 0 ||
-         (path_reader.pos < path.size && path_reader.pos >= node.key.size)
+         (path_reader.pos < path.bytesize && path_reader.pos >= node.key.bytesize)
         # determine if a child of this node contains the remaining part
         # of the path
         added = false
@@ -156,7 +156,7 @@ module Radix
 
         # adjust priorities
         node.sort!
-      elsif path_reader.pos == path.size && path_reader.pos == node.key.size
+      elsif path_reader.pos == path.bytesize && path_reader.pos == node.key.bytesize
         # determine if path matches key and potentially be a duplicate
         # and raise if is the case
 
@@ -166,7 +166,7 @@ module Radix
           # assign payload since this is an empty node
           node.payload = payload
         end
-      elsif path_reader.pos > 0 && path_reader.pos < node.key.size
+      elsif path_reader.pos > 0 && path_reader.pos < node.key.bytesize
         # determine if current node key needs to be split to accomodate new
         # children nodes
 
@@ -187,7 +187,7 @@ module Radix
         node.sort!
 
         # determine if path still continues
-        if path_reader.pos < path.size
+        if path_reader.pos < path.bytesize
           new_key = path.byte_slice(path_reader.pos)
           node.children << Node(T).new(new_key, payload)
           node.sort!
@@ -237,7 +237,7 @@ module Radix
       # special consideration when comparing the first node vs. others
       # in case of node key and path being the same, return the node
       # instead of walking character by character
-      if first && (path.size == node.key.size && path == node.key) && node.payload?
+      if first && (path.bytesize == node.key.bytesize && path == node.key) && node.payload?
         result.use node
         return
       end
@@ -303,8 +303,8 @@ module Radix
       # nodes
       if path_reader.has_next?
         # using trailing slash?
-        if node.key.size > 0 &&
-           path_reader.pos + 1 == path.size &&
+        if node.key.bytesize > 0 &&
+           path_reader.pos + 1 == path.bytesize &&
            path_reader.current_char == '/'
           result.use node
           return
@@ -329,14 +329,14 @@ module Radix
       # key still contains characters to walk
       if key_reader.has_next?
         # determine if there is just a trailing slash?
-        if key_reader.pos + 1 == node.key.size &&
+        if key_reader.pos + 1 == node.key.bytesize &&
            key_reader.current_char == '/'
           result.use node
           return
         end
 
         # check if remaining part is catch all
-        if key_reader.pos < node.key.size &&
+        if key_reader.pos < node.key.bytesize &&
            ((key_reader.current_char == '/' && key_reader.peek_next_char == '*') ||
            key_reader.current_char == '*')
           # skip to '*' only if necessary

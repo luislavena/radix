@@ -7,6 +7,7 @@ so please check *Changed* and *Removed* notes before upgrading.
 ## [Unreleased]
 ### Fixed
 - Correct lookup issue caused by incorrect comparison of shared key [#21](https://github.com/luislavena/radix/issues/21)
+- Improve support for non-ascii keys in a tree.
 
 ## [0.3.7] - 2017-02-04
 ### Fixed

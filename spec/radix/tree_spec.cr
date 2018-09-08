@@ -442,6 +442,14 @@ module Radix
           result.params["trailing"].empty?.should be_true
         end
 
+        it "returns optional catch all globbing" do
+          tree = Tree(Symbol).new
+          tree.add "/members/*trailing", :members_catch_all
+
+          result = tree.find("/members2")
+          result.found?.should be_false
+        end
+
         it "does not find when catch all is not full match" do
           tree = Tree(Symbol).new
           tree.add "/", :root

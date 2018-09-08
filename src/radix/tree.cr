@@ -325,6 +325,7 @@ module Radix
           end
         end
 
+        # path differs from key, no use searching anymore
         return
       end
 

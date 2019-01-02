@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+
+## [0.3.9] - 2019-01-02
 ### Fixed
 - Correct catch-all issue caused when paths differ [#26](https://github.com/luislavena/radix/pull/26) (@silasb)
 
@@ -83,7 +85,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.8...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.9...HEAD
+[0.3.9]: https://github.com/luislavena/radix/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/luislavena/radix/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/luislavena/radix/compare/v0.3.6...v0.3.7
 [0.3.6]: https://github.com/luislavena/radix/compare/v0.3.5...v0.3.6

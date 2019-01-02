@@ -324,6 +324,9 @@ module Radix
             return
           end
         end
+
+        # path differs from key, no use searching anymore
+        return
       end
 
       # key still contains characters to walk

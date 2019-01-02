@@ -451,6 +451,14 @@ module Radix
           result.found?.should be_false
         end
 
+        it "does not find when path search has been exhausted" do
+          tree = Tree(Symbol).new
+          tree.add "/members/*trailing", :members_catch_all
+
+          result = tree.find("/members2")
+          result.found?.should be_false
+        end
+
         it "does prefer specific path over catch all if both are present" do
           tree = Tree(Symbol).new
           tree.add "/members", :members

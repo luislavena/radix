@@ -5,6 +5,8 @@ This project aims to comply with [Semantic Versioning](http://semver.org/),
 so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
+### Fixed
+- Correct catch-all issue caused when paths differ [#26](https://github.com/luislavena/radix/pull/26) (@silasb)
 
 ## [0.3.8] - 2017-03-12
 ### Fixed

@@ -1,25 +1,5 @@
 require "../spec_helper"
 
-# Silence deprecation warnings when running specs and allow
-# capture them for inspection.
-module Radix
-  class Tree(T)
-    @show_deprecations = false
-    @stderr : IO::Memory?
-
-    def show_deprecations!
-      @show_deprecations = true
-    end
-
-    private def deprecation(message)
-      if @show_deprecations
-        @stderr ||= IO::Memory.new
-        @stderr.not_nil!.puts message
-      end
-    end
-  end
-end
-
 # Simple Payload class
 record Payload
 

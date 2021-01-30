@@ -462,11 +462,5 @@ module Radix
       (!different) &&
         (!key_reader.has_next? || _check_markers(key_reader.current_char))
     end
-
-    # :nodoc:
-    private def deprecation(message : String)
-      STDERR.puts message
-      STDERR.flush
-    end
   end
 end

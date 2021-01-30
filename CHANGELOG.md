@@ -6,6 +6,9 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
 
+### Removed
+- Remove `Radix::Result#key` since exposes internal details about structure (breaking change)
+
 ## [0.3.9] - 2019-01-02
 ### Fixed
 - Correct catch-all issue caused when paths differ [#26](https://github.com/luislavena/radix/pull/26) (@silasb)

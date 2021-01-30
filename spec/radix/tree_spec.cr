@@ -297,7 +297,6 @@ module Radix
 
           result = tree.find "/about"
           result.found?.should be_true
-          result.key.should eq("/about")
           result.payload?.should be_truthy
           result.payload.should eq(:about)
         end
@@ -308,7 +307,6 @@ module Radix
 
           result = tree.find "/about/"
           result.found?.should be_true
-          result.key.should eq("/about")
         end
 
         it "finds when key contains trailing slash" do
@@ -317,7 +315,6 @@ module Radix
 
           result = tree.find "/about"
           result.found?.should be_true
-          result.key.should eq("/about/")
           result.payload.should eq(:about)
         end
       end
@@ -331,7 +328,6 @@ module Radix
 
           result = tree.find("/abc")
           result.found?.should be_true
-          result.key.should eq("/abc")
           result.payload.should eq(:abc)
         end
 
@@ -342,7 +338,6 @@ module Radix
 
           result = tree.find("/products")
           result.found?.should be_true
-          result.key.should eq("/products")
           result.payload.should eq(:products)
         end
 
@@ -356,7 +351,6 @@ module Radix
 
           result = tree.find("/blog/tags/")
           result.found?.should be_true
-          result.key.should eq("/blog/tags")
           result.payload.should eq(:tags)
         end
       end
@@ -370,7 +364,7 @@ module Radix
 
           result = tree.find("/日本日本語は難しい/")
           result.found?.should be_true
-          result.key.should eq("/日本日本語は難しい")
+          result.payload.should eq(:japanese_is_difficult)
         end
       end
 
@@ -383,7 +377,6 @@ module Radix
 
           result = tree.find("/src/file.png")
           result.found?.should be_true
-          result.key.should eq("/*filepath")
           result.payload.should eq(:all)
         end
 
@@ -406,7 +399,6 @@ module Radix
 
           result = tree.find("/search")
           result.found?.should be_true
-          result.key.should eq("/search/*extra")
           result.params.has_key?("extra").should be_true
           result.params["extra"].empty?.should be_true
         end
@@ -417,7 +409,6 @@ module Radix
 
           result = tree.find("/members")
           result.found?.should be_true
-          result.key.should eq("/members*trailing")
           result.params.has_key?("trailing").should be_true
           result.params["trailing"].empty?.should be_true
         end
@@ -446,7 +437,7 @@ module Radix
 
           result = tree.find("/members")
           result.found?.should be_true
-          result.key.should eq("/members")
+          result.payload.should eq(:members)
         end
 
         it "does prefer catch all over specific key with partially shared key" do
@@ -456,7 +447,7 @@ module Radix
 
           result = tree.find("/orders/cancelled")
           result.found?.should be_true
-          result.key.should eq("/orders/*anything")
+          result.payload.should eq(:orders_catch_all)
           result.params.has_key?("anything").should be_true
           result.params["anything"].should eq("cancelled")
         end
@@ -472,7 +463,6 @@ module Radix
 
           result = tree.find("/products/10")
           result.found?.should be_true
-          result.key.should eq("/products/:id")
           result.payload.should eq(:product)
         end
 
@@ -518,7 +508,7 @@ module Radix
 
           result = tree.find("/tag-edit2")
           result.found?.should be_true
-          result.key.should eq("/tag-edit2")
+          result.payload.should eq(:alternate_tag_edit)
         end
 
         it "does prefer named parameter over specific key with partially shared key" do
@@ -528,7 +518,7 @@ module Radix
 
           result = tree.find("/orders/10")
           result.found?.should be_true
-          result.key.should eq("/orders/:id")
+          result.payload.should eq(:specific_order)
           result.params.has_key?("id").should be_true
           result.params["id"].should eq("10")
         end
@@ -542,7 +532,6 @@ module Radix
 
           result = tree.find("/about/shipping")
           result.found?.should be_true
-          result.key.should eq("/:section/:page")
           result.payload.should eq(:static_page)
         end
 
@@ -574,17 +563,16 @@ module Radix
 
           result = tree.find("/products/1000")
           result.found?.should be_true
-          result.key.should eq("/products/:id")
           result.payload.should eq(:product)
 
           result = tree.find("/admin/articles")
           result.found?.should be_true
-          result.key.should eq("/*filepath")
+          result.payload.should eq(:all)
           result.params["filepath"].should eq("admin/articles")
 
           result = tree.find("/products/featured")
           result.found?.should be_true
-          result.key.should eq("/products/featured")
+          result.payload.should eq(:featured)
           result.payload.should eq(:featured)
         end
       end
@@ -597,7 +585,7 @@ module Radix
 
           result = tree.find "/one-longer/10"
           result.found?.should be_true
-          result.key.should eq("/one-longer/:id")
+          result.payload.should eq(:two)
           result.params["id"].should eq("10")
         end
       end

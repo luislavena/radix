@@ -3,6 +3,7 @@
 [Radix tree](https://en.wikipedia.org/wiki/Radix_tree) implementation for
 Crystal language
 
+[![CI](https://github.com/luislavena/radix/workflows/CI/badge.svg)](https://github.com/luislavena/radix/actions)
 [![Latest Release](https://img.shields.io/github/release/luislavena/radix.svg)](https://github.com/luislavena/radix/releases)
 
 ## Installation

@@ -1,0 +1,26 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-latest, crystal: latest}
+          - {os: macos-latest, crystal: latest}
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: oprypin/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal}}
+      - uses: actions/checkout@v2
+      - run: crystal spec
+      - run: crystal tool format --check src spec

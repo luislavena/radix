@@ -1,0 +1,23 @@
+name: CI (nightly)
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 6 * * 1'  # Every monday 6 AM
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: ubuntu-latest, crystal: nightly}
+          - {os: macos-latest, crystal: nightly}
+    runs-on: ${{matrix.os}}
+    steps:
+      - uses: oprypin/install-crystal@v1
+        with:
+          crystal: ${{matrix.crystal}}
+      - uses: actions/checkout@v2
+      - run: crystal spec --error-on-warnings --error-trace

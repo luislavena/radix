@@ -299,6 +299,14 @@ module Radix
         end
       end
 
+      # determine if remaining part of key and path are still the same
+      if (key_reader.has_next? && path_reader.has_next?) &&
+         (key_reader.current_char != path_reader.current_char ||
+         key_reader.peek_next_char != path_reader.peek_next_char)
+        # path and key differ, skipping
+        return
+      end
+
       # still path to walk, check for possible trailing slash or children
       # nodes
       if path_reader.has_next?

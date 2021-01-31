@@ -353,6 +353,15 @@ module Radix
           result.found?.should be_true
           result.payload.should eq(:tags)
         end
+
+        it "do not find when lookup for non-root key" do
+          tree = Tree(Symbol).new
+          tree.add "/prefix/", :prefix
+          tree.add "/prefix/foo", :foo
+
+          result = tree.find "/foo"
+          result.found?.should be_false
+        end
       end
 
       context "unicode nodes with shared parent" do

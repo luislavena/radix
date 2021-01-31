@@ -8,6 +8,7 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ### Fixed
 - Correct lookup issue caused by partial shared key with glob [#23](https://github.com/luislavena/radix/issues/23)
+- Correct lookup caused by non-root key in suffix [#27](https://github.com/luislavena/radix/issues/27)
 
 ### Removed
 - Remove `Radix::Result#key` since exposes internal details about structure (breaking change)

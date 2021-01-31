@@ -6,12 +6,13 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
 
+## [0.4.0] - 2021-01-31
 ### Fixed
 - Correct lookup issue caused by partial shared key with glob [#23](https://github.com/luislavena/radix/issues/23)
 - Correct lookup caused by non-root key in suffix [#27](https://github.com/luislavena/radix/issues/27)
 
 ### Removed
-- Remove `Radix::Result#key` since exposes internal details about structure (breaking change)
+- Remove `Radix::Result#key` since exposes internal details about structure (**breaking change**)
 
 ## [0.3.9] - 2019-01-02
 ### Fixed
@@ -92,7 +93,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.3.9...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/luislavena/radix/compare/v0.3.9...v0.4.0
 [0.3.9]: https://github.com/luislavena/radix/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/luislavena/radix/compare/v0.3.7...v0.3.8
 [0.3.7]: https://github.com/luislavena/radix/compare/v0.3.6...v0.3.7

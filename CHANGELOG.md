@@ -6,6 +6,9 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
 
+### Fixed
+- Correct lookup issue caused by partial shared key with glob [#23](https://github.com/luislavena/radix/issues/23)
+
 ### Removed
 - Remove `Radix::Result#key` since exposes internal details about structure (breaking change)
 

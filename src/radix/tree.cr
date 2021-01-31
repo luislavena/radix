@@ -315,13 +315,17 @@ module Radix
         node.children.each do |child|
           # check if child key is a named parameter, catch all or shares parts
           # with new path
-          if (child.key[0]? == '*' || child.key[0]? == ':') ||
-             _shared_key?(new_path, child.key)
-            # consider this node for key but don't use payload
-            result.use node, payload: false
-
+          if (child.glob? || child.named?) || _shared_key?(new_path, child.key)
+            # traverse branch to determine if valid
             find new_path, result, child
-            return
+
+            if result.found?
+              # stop iterating over nodes
+              return
+            else
+              # move to next child
+              next
+            end
           end
         end
 

@@ -451,6 +451,19 @@ module Radix
           result.params.has_key?("anything").should be_true
           result.params["anything"].should eq("cancelled")
         end
+
+        it "does prefer root catch all over specific partially shared key" do
+          tree = Tree(Symbol).new
+          tree.add "/*anything", :root_catch_all
+          tree.add "/robots.txt", :robots
+          tree.add "/resources", :resources
+
+          result = tree.find("/reviews")
+          result.found?.should be_true
+          result.payload.should eq(:root_catch_all)
+          result.params.has_key?("anything").should be_true
+          result.params["anything"].should eq("reviews")
+        end
       end
 
       context "dealing with named parameters" do

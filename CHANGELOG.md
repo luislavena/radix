@@ -6,6 +6,9 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
 
+### Fixed
+- Indicate minimum Crystal version (for 1.0 compatibility) [#32](https://github.com/luislavena/radix/pull/32) (@carlhoerberg)
+
 ## [0.4.0] - 2021-01-31
 ### Fixed
 - Correct lookup issue caused by partial shared key with glob [#23](https://github.com/luislavena/radix/issues/23)

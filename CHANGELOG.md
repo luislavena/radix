@@ -6,6 +6,7 @@ so please check *Changed* and *Removed* notes before upgrading.
 
 ## [Unreleased]
 
+## [0.4.1] - 2021-03-23
 ### Fixed
 - Indicate minimum Crystal version (for 1.0 compatibility) [#32](https://github.com/luislavena/radix/pull/32) (@carlhoerberg)
 
@@ -96,7 +97,8 @@ so please check *Changed* and *Removed* notes before upgrading.
 ### Added
 - Initial release based on code extracted from Beryl.
 
-[Unreleased]: https://github.com/luislavena/radix/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/luislavena/radix/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/luislavena/radix/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/luislavena/radix/compare/v0.3.9...v0.4.0
 [0.3.9]: https://github.com/luislavena/radix/compare/v0.3.8...v0.3.9
 [0.3.8]: https://github.com/luislavena/radix/compare/v0.3.7...v0.3.8

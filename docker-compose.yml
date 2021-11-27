@@ -1,0 +1,11 @@
+services:
+  crystal:
+    image: ghcr.io/luislavena/hydrofoil-crystal:1.2
+    command: overmind start -f Procfile.dev
+    working_dir: /app
+
+    # Set these env variables using `export FIXUID=$(id -u) FIXGID=$(id -g)`
+    user: ${FIXUID:-1000}:${FIXGID:-1000}
+
+    volumes:
+      - .:/app:cached

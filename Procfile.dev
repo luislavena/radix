@@ -1,0 +1,2 @@
+# watch for changes in src & spec and invoke `crystal spec`. Run only when changes are detected
+autospec: watchexec -w src -w spec -f '**/*.cr' --postpone --on-busy-update=do-nothing -- crystal spec
